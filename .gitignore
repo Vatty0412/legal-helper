@@ -1,0 +1,29 @@
+# Node
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Env
+.env
+backend/.env
+frontend/.env
+ai-service/.env
+
+# Build
+frontend/dist/
+
+# Uploads and logs
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/logs/*
+!backend/logs/.gitkeep
+
+# IDE
+.vscode/
+.DS_Store

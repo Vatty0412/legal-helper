@@ -1,0 +1,31 @@
+import mongoose from 'mongoose';
+
+const sessionSchema = new mongoose.Schema(
+	{
+		userAgent: { type: String },
+		ip: { type: String },
+		refreshToken: { type: String, required: true },
+		createdAt: { type: Date, default: Date.now },
+		expiresAt: { type: Date, required: true },
+	},
+	{ _id: false },
+);
+
+const userSchema = new mongoose.Schema(
+	{
+		name: { type: String, required: true, trim: true },
+		email: {
+			type: String,
+			required: true,
+			unique: true,
+			lowercase: true,
+			trim: true,
+		},
+		passwordHash: { type: String, required: true },
+		avatar: { type: String, default: '' },
+		sessions: { type: [sessionSchema], default: [] },
+	},
+	{ timestamps: true },
+);
+
+export const User = mongoose.model('User', userSchema);

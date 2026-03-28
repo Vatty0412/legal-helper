@@ -1,0 +1,56 @@
+version: '3.9'
+
+services:
+    mongodb:
+        image: mongo:7
+        container_name: legal-helper-mongo
+        ports:
+            - '27017:27017'
+        volumes:
+            - mongo_data:/data/db
+
+    qdrant:
+        image: qdrant/qdrant:v1.13.1
+        container_name: legal-helper-qdrant
+        ports:
+            - '6333:6333'
+        volumes:
+            - qdrant_data:/qdrant/storage
+
+    backend:
+        build: ./backend
+        container_name: legal-helper-backend
+        env_file:
+            - ./backend/.env
+        depends_on:
+            - mongodb
+            - ai-service
+        ports:
+            - '4000:4000'
+        volumes:
+            - ./backend/uploads:/app/uploads
+            - ./backend/logs:/app/logs
+
+    ai-service:
+        build: ./ai-service
+        container_name: legal-helper-ai
+        env_file:
+            - ./ai-service/.env
+        depends_on:
+            - qdrant
+        ports:
+            - '8000:8000'
+
+    frontend:
+        build: ./frontend
+        container_name: legal-helper-frontend
+        env_file:
+            - ./frontend/.env
+        depends_on:
+            - backend
+        ports:
+            - '5173:5173'
+
+volumes:
+    mongo_data:
+    qdrant_data:
